@@ -75,7 +75,7 @@
     .package{padding:27px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(155deg,#1a1725,#101018);display:flex;flex-direction:column;min-height:370px}
     .package.featured{border-color:rgba(255,76,163,.55);background:radial-gradient(circle at 100% 0,rgba(255,76,163,.13),transparent 42%),linear-gradient(155deg,#21172a,#111018);box-shadow:0 15px 60px rgba(0,0,0,.2)}
     .package-label{font:10px "DM Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#d6b7ff}
-    .package h3{font-size:22px;margin:15px 0 3px;letter-spacing:-.04em}
+    .package h2,.package h3{font-size:22px;margin:15px 0 3px;letter-spacing:-.04em}
     .price{font-size:38px;font-weight:800;letter-spacing:-.07em;margin:6px 0 14px}
     .price small{font:10px "DM Mono",monospace;color:var(--muted);letter-spacing:0}
     .package p{font-size:13px;color:var(--muted);margin:0 0 20px}
