@@ -170,3 +170,13 @@
  .page-hero{padding:58px 0 34px}
  .content-section{padding:32px 0 65px}
 }
+
+
+/* NorthLight identity and film addition */
+.brand-logo{display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:45px;height:38px;overflow:hidden;border-radius:8px;background:#f000db}
+.brand-logo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.showreel-section{padding:90px 0;border-bottom:1px solid var(--line)}
+.showreel-frame{max-width:900px;margin:0 auto;border:1px solid rgba(255,255,255,.16);border-radius:22px;overflow:hidden;background:#08070c;box-shadow:0 22px 65px rgba(0,0,0,.26)}
+.showreel-video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#08070c;object-fit:contain}
+.showreel-caption{max-width:900px;margin:14px auto 0;color:var(--muted);font:10px "DM Mono",monospace;letter-spacing:.13em}
+@media(max-width:600px){.brand{gap:7px;font-size:11px;letter-spacing:.06em}.brand-logo{width:36px;height:32px}.showreel-section{padding:70px 0}.showreel-frame{border-radius:14px}}
