@@ -26,3 +26,11 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, {threshold:0.12});
 document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+const contactEmail = document.querySelector('a[href^="mailto:studionorthlights@gmail.com"]');
+if (contactEmail) {
+  const params = new URLSearchParams(window.location.search);
+  const packageName = params.get("package");
+  const topic = params.get("topic");
+  const subject = packageName ? packageName + " enquiry" : (topic === "workflow" ? "Workflow enquiry" : "NorthLight Studios project enquiry");
+  contactEmail.href = "mailto:studionorthlights@gmail.com?subject=" + encodeURIComponent(subject);
+}
