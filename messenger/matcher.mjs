@@ -36,9 +36,14 @@ function identifiers(x) {
   return {phone:normalPhone(x.phone??x["Messaging Contact"]),prefix:normalPhone(x.prefix??x["Phone Prefix Evidence"],true),name:normName(x.name??x.Business),email:normEmail(x.email??x["Public Email"]),domain:normDomain(x.ownedDomain),nzbn:normNZBN(x.nzbn)};
 }
 
+function isHistoricalCandidate(candidate){
+  return ["Historical — exclude","Duplicate — exclude","Contact attempted — exclude","Existing conversation — exclude"].includes(candidate["New Lead Eligibility"])||candidate["Sending Status"]==="Sent"||["Sent","Replied","No iMessage","Skipped","Do not contact"].includes(candidate["Messenger Status"])||Boolean(candidate["date:Messenger Last Contact:start"]);
+}
+
 function checkCandidate(candidate,history,options={}) {
   if(!candidate||!Array.isArray(history)||history.some(x=>!x||typeof x!=="object"))return {decision:"BLOCK",reason:"INVALID_INPUT",matches:[]};
   if(candidate["Do Not Contact"]===true||candidate["Do Not Contact"]==="__YES__"||candidate["Messaging Consent"]==="Withdrawn"||candidate["Messaging Consent"]==="No consent")return {decision:"BLOCK",reason:"CANDIDATE_SUPPRESSED",matches:[]};
+  if(isHistoricalCandidate(candidate))return {decision:"BLOCK",reason:"CANDIDATE_HISTORICAL",matches:[]};
   const a=identifiers(candidate), matches=[];
   for(const row of history){
     if(candidate.id&&row.id&&candidate.id===row.id) continue;
@@ -84,6 +89,10 @@ function runTests(){
   t("NZBN match",checkCandidate({...candidate,nzbn:"0000000000000"},[{nzbn:"0000000000000"}],{historyComplete:true}).reason,"HISTORICAL_MATCH");
   t("Self row excluded",checkCandidate({...candidate,id:"new"},[{...candidate,id:"new"}],{historyComplete:true}).reason,"NO_MATCH_FOUND_NOT_SEND_APPROVAL");
   t("Opt-out wins over other matches",check([{name:"Example Business"},{phone:"+64210000001","Messaging Consent":"Withdrawn"}]),"OPT_OUT_MATCH");
+  t("Own sent record cannot bypass self check",checkCandidate({...candidate,id:"new","Sending Status":"Sent"},[{...candidate,id:"new"}],{historyComplete:true}).reason,"CANDIDATE_HISTORICAL");
+  t("Skipped candidate stays blocked",checkCandidate({...candidate,"Messenger Status":"Skipped"},[],{historyComplete:true}).reason,"CANDIDATE_HISTORICAL");
+  t("Historical classification stays blocked",checkCandidate({...candidate,"New Lead Eligibility":"Historical — exclude"},[],{historyComplete:true}).reason,"CANDIDATE_HISTORICAL");
+  t("Prior contact date blocks",checkCandidate({...candidate,"date:Messenger Last Contact:start":"2026-11-25"},[],{historyComplete:true}).reason,"CANDIDATE_HISTORICAL");
   return tests;
 }
 
